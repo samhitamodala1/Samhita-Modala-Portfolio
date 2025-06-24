@@ -41,17 +41,31 @@ For your second milestone, explain what you've worked on since your previous mil
 - Previous challenges you faced that you overcame
 - What needs to be completed before your final milestone 
 
-# First Milestone
 
 **Don't forget to replace the text below with the embedding for your milestone video. Go to Youtube, click Share -> Embed, and copy and paste the code to replace what's below.**
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/CaCazFBhYKs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/CaCazFBhYKs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> -->
 
-For your first milestone, describe what your project is and how you plan to build it. You can include:
+# First Milestone
+
+<!-- For your first milestone, describe what your project is and how you plan to build it. You can include:
 - An explanation about the different components of your project and how they will all integrate together
 - Technical progress you've made so far
 - Challenges you're facing and solving in your future milestones
 - What your plan is to complete your project --->
+
+For my first milestone, I tested each component individually and figured out how each piece worked. Some of the components I tested were:
+- Flex sensor
+- Accelerometer
+- Buzzer
+
+I tested the flex sensor by connecting it with wires to the ESP 32 and ran a code so when the sensor was bent, the sensor value would increase. If the values are high, it means your wrist is bent a lot. This is useful for wrist rehab because it tracks how much you bend your wrist. I tested the accelerometer by connecting it to the ESP 32 and when the accelerometer was moved around it would show how fast the piece was moving in 3 directions: left/right (x), up/down (y), and forward/back (z). This is useful as it helps track wrist motion for rehab. Later, these values can be used to calculate angles or trigger the buzzer if the wrist moves too far. I tested the buzzer by connecting it to my original flex sensor model. I added a code so that when the flex sensor is bent and it shows a value of 2500 or greater, the buzzer buzzes.
+
+Challenges:
+The biggest challenge I faced was that the accelerometer's test code wasn't working because the code was for a different type of accelerometer and there wasn't any exisiting code to test it so I had to get multiple parts of code from different areas and put it together. There were also multiple libraries I had to download to run the test code. 
+
+Next Steps:
+My next step is to work on milestone 2 which is to work on sensor integration and find ranges. I need to research about the correct and incorrect angles to bend your wrist at and add my information into my flex sensor and accelerator code.
 
 # Starter Project
 
@@ -63,13 +77,13 @@ For your first milestone, describe what your project is and how you plan to buil
 <!--- Challenges you're facing and solving in your future milestones -->
 <!--- What your plan is to complete your project -->
 
-# Description:
-This is my starter project. It is a retro arcade console, and the reason I picked this is because I felt like it interested me the most. I'll give a short summary of how it works. Basically, once you press the red button to turn it on, you can click the left and right yellow buttons, which change the games. As you can see, there are multiple games you can play. Some games you can play are Tetris, Snake, etc., etc. Some components in this project are, of course, the buttons, the score tracker in the top right, the port for connecting it to a computer, a buzzer, a battery pack, the clear plastic frame, and so much more. 
+Description:
+This is my starter project. It is a retro arcade console, and the reason I picked this is because I felt like it interested me the most. Basically, once you press the red button to turn it on, you can click the left and right yellow buttons, which change the games. As you can see, there are multiple games you can play. Some games you can play are Tetris, Snake, etc., etc. Some components in this project are, of course, the buttons, the score tracker in the top right, the port for connecting it to a computer, a buzzer, a battery pack, the clear plastic frame, and so much more. 
 
-# Challenge:
+Challenge:
 The biggest challenge I faced was soldering. It was not only tedious but also difficult, as the holes were pretty close to each other, which caused solder to get into the wrong holes. I messed up the soldering for the battery pack, so I had to remove the solder and redo it, but it worked great after that.
 
-# Next Steps:
+Next Steps:
 My next step is to start on my wrist rehabilitation device. I've set 3 milestones for myself too, which are
   1. Test each component individually (ESP32, buzzer, flex sensors, etc.)
   2. Work on sensor integration and finding ranges

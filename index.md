@@ -1,11 +1,14 @@
 # Wrist Rehabilitation Device
-Replace this text with a brief description (2-3 sentences) of your project. This description should draw the reader in and make them interested in what you've built. You can include what the biggest challenges, takeaways, and triumphs from completing the project were. As you complete your portfolio, remember your audience is less familiar than you are with all that your project entails!
+<!--Replace this text with a brief description (2-3 sentences) of your project. This description should draw the reader in and make them interested in what you've built. You can include what the biggest challenges, takeaways, and triumphs from completing the project were. As you complete your portfolio, remember your audience is less familiar than you are with all that your project entails!-->
 
-You should comment out all portions of your portfolio that you have not completed yet, as well as any instructions:
+My project is a wrist rehabilitation device that uses an accelerometer and flex sensor to monitor wrist movements and provide feedback during exercises. By showing data through Bluetooth, it helps track range of motion and exercise repetitions. This device aims to make rehabilitation more engaging and effective.
+
+
+<!--- You should comment out all portions of your portfolio that you have not completed yet, as well as any instructions:
 ```HTML 
-<!--- This is an HTML comment in Markdown -->
-<!--- Anything between these symbols will not render on the published site -->
-```
+This is an HTML comment in Markdown 
+ Anything between these symbols will not render on the published site -->
+
 
 | **Engineer** | **School** | **Area of Interest** | **Grade** |
 |:--:|:--:|:--:|:--:|
@@ -50,8 +53,76 @@ One of the biggest challenges I faced was getting the flex sensor and accelerome
 **Next steps:**
 My next step is to assemble all the components into a wearable prototype. After assembling, I plan to test the device during wrist exercises to evaluate how accurately it detects motion and provides feedback in real-time. I will observe whether the buzzer alerts at the right times and adjust the calibration ranges if needed to improve accuracy and comfort.
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/dAKtcRCgfs4?si=HONM-ibQDgTX6WsO" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-**flex sensor code:** 
+# First Milestone
+
+<!-- **Don't forget to replace the text below with the embedding for your milestone video. Go to Youtube, click Share -> Embed, and copy and paste the code to replace what's below.**
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/CaCazFBhYKs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> -->
+
+<!-- For your first milestone, describe what your project is and how you plan to build it. You can include:
+- An explanation about the different components of your project and how they will all integrate together
+- Technical progress you've made so far
+- Challenges you're facing and solving in your future milestones
+- What your plan is to complete your project --->
+
+**Description:**
+For my first milestone, I tested each component individually and figured out how each piece worked. Some of the components I tested were:
+- Flex sensor
+- Accelerometer
+- Buzzer
+
+The wrist rehab device uses three main components: a flex sensor, an accelerometer, and a buzzer, all connected to a device called the ESP 32. The flex sensor checks how much the wrist is bent. It works by using a basic electrical setup called a voltage divider, which just means the sensor and another resistor split up the power. Ohms law says that V = I x R (voltage = current x resistance) so when the resistance changes, the voltage also changes. The ESP 32 reads that voltage to figure out how much the wrist is bending. Bigger numbers usually mean more bending. The accelerometer is a motion sensor that measures how fast the wrist moves in three directions: left/right (x), up/down (y), and forward/back (z). The code turns the values into angles, like 40 degrees, to show how tilted the wrist is. The buzzer is the part that makes a sound when the wrist bends too much. If bent too much or the sensor value gets too high (in my code i set this value to 2500 or greater), the buzzer buzzes.
+
+**Challenges:**
+The biggest challenge I faced was that the accelerometer's test code wasn't working because the code was for a different type of accelerometer and there wasn't any exisiting code to test it so I had to get multiple parts of code from different areas and put it together. There were also multiple libraries I had to download to run the test code. 
+
+**Next Steps:**
+My next step is to work on milestone 2 which is to work on sensor integration and find ranges. I need to research about the correct and incorrect angles to bend your wrist at and add my information into my flex sensor and accelerator code.
+
+<img src="Bluestamp_1.jpg" alt="Alt Text" width="600" height="500"> 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/UymND75sh6g?si=2zHMyf4AibszDAVQ&amp;start=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+# Starter Project
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/rH0NynEeV1s?si=uxwH6TJWs3OIG8ov" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<!--- For your first milestone, describe what your project is and how you plan to build it. You can include: -->
+<!--- An explanation about the different components of your project and how they will all integrate together -->
+<!--- Technical progress you've made so far -->
+<!--- Challenges you're facing and solving in your future milestones -->
+<!--- What your plan is to complete your project -->
+
+**Description:**
+This is my starter project. It is a retro arcade console, and the reason I picked this is because I felt like it interested me the most. Basically, once you press the red button to turn it on, you can click the left and right yellow buttons, which change the games. As you can see, there are multiple games you can play. Some games you can play are Tetris, Snake, etc., etc. Some components in this project are, of course, the buttons, the score tracker in the top right, the port for connecting it to a computer, a buzzer, a battery pack, the clear plastic frame, and so much more. 
+
+**Challenge:**
+The biggest challenge I faced was soldering. It was not only tedious but also difficult, as the holes were pretty close to each other, which caused soldered parts to touch. I messed up the soldering for the battery pack, so I had to remove the solder and redo it, but it worked great after that.
+
+**Next Steps:**
+My next step is to start on my wrist rehabilitation device. I've set 3 milestones for myself too, which are
+  1. Test each component individually (ESP32, buzzer, flex sensors, etc.)
+  2. Work on sensor integration and finding ranges
+  3. Set up a Bluetooth connection and real-time feedback system with a buzzer
+     
+I also plan to add some modifications, which include
+  1. Add vibration feedback in case the person wants silent updates from the device
+  2. Create a progress tracking system that shows updates or improvements over time
+  3. Add a small screen that shows live data on the wrist sleeve
+
+
+ # Schematics 
+<!--Here's where you'll put images of your schematics. [Tinkercad](https://www.tinkercad.com/blog/official-guide-to-tinkercad-circuits) and [Fritzing](https://fritzing.org/learning/) are both great resoruces to create professional schematic diagrams, though BSE recommends Tinkercad becuase it can be done easily and for free in the browser. --->
+
+<img src="bluestamp schematic.png" alt="Alt Text" width="800" height="500">
+The image above is a schematic I used for my first and second milestone.
+
+<!--- # Code
+Here's where you'll put your code. The syntax below places it into a block of code. Follow the guide [here]([url](https://www.markdownguide.org/extended-syntax/)) to learn how to customize it to your project needs. -->
+
+
+**flex sensor code:**
 ```c++
 const int flexPin = 34;                   // pin where flex sensor wire is connected
 const int buzzerPin = 23;                 // pin where buzzer is connected
@@ -87,6 +158,7 @@ void loop() {
   delay(500);
 }
 ```
+
 
 **accelerometer code:**
 ```c++
@@ -167,85 +239,7 @@ lsm6ds.getAccelerometerSensor()->getEvent(&accel);
 
 ```
 
-# First Milestone
-
-<!-- **Don't forget to replace the text below with the embedding for your milestone video. Go to Youtube, click Share -> Embed, and copy and paste the code to replace what's below.**
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/CaCazFBhYKs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> -->
-
-<!-- For your first milestone, describe what your project is and how you plan to build it. You can include:
-- An explanation about the different components of your project and how they will all integrate together
-- Technical progress you've made so far
-- Challenges you're facing and solving in your future milestones
-- What your plan is to complete your project --->
-
-**Description:**
-For my first milestone, I tested each component individually and figured out how each piece worked. Some of the components I tested were:
-- Flex sensor
-- Accelerometer
-- Buzzer
-
-The wrist rehab device uses three main components: a flex sensor, an accelerometer, and a buzzer, all connected to a device called the ESP 32. The flex sensor checks how much the wrist is bent. It works by using a basic electrical setup called a voltage divider, which just means the sensor and another resistor split up the power. Ohms law says that V = I x R (voltage = current x resistance) so when the resistance changes, the voltage also changes. The ESP 32 reads that voltage to figure out how much the wrist is bending. Bigger numbers usually mean more bending. The accelerometer is a motion sensor that measures how fast the wrist moves in three directions: left/right (x), up/down (y), and forward/back (z). The code turns the values into angles, like 40 degrees, to show how tilted the wrist is. The buzzer is the part that makes a sound when the wrist bends too much. If bent too much or the sensor value gets too high (in my code i set this value to 2500 or greater), the buzzer buzzes.
-
-**Challenges:**
-The biggest challenge I faced was that the accelerometer's test code wasn't working because the code was for a different type of accelerometer and there wasn't any exisiting code to test it so I had to get multiple parts of code from different areas and put it together. There were also multiple libraries I had to download to run the test code. 
-
-**Next Steps:**
-My next step is to work on milestone 2 which is to work on sensor integration and find ranges. I need to research about the correct and incorrect angles to bend your wrist at and add my information into my flex sensor and accelerator code.
-
-<img src="Bluestamp_1.jpg" alt="Alt Text" width="600" height="500"> 
-
-# Starter Project
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/rH0NynEeV1s?si=uxwH6TJWs3OIG8ov" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
-<!--- For your first milestone, describe what your project is and how you plan to build it. You can include: -->
-<!--- An explanation about the different components of your project and how they will all integrate together -->
-<!--- Technical progress you've made so far -->
-<!--- Challenges you're facing and solving in your future milestones -->
-<!--- What your plan is to complete your project -->
-
-**Description:**
-This is my starter project. It is a retro arcade console, and the reason I picked this is because I felt like it interested me the most. Basically, once you press the red button to turn it on, you can click the left and right yellow buttons, which change the games. As you can see, there are multiple games you can play. Some games you can play are Tetris, Snake, etc., etc. Some components in this project are, of course, the buttons, the score tracker in the top right, the port for connecting it to a computer, a buzzer, a battery pack, the clear plastic frame, and so much more. 
-
-**Challenge:**
-The biggest challenge I faced was soldering. It was not only tedious but also difficult, as the holes were pretty close to each other, which caused solder to get into the wrong holes. I messed up the soldering for the battery pack, so I had to remove the solder and redo it, but it worked great after that.
-
-**Next Steps:**
-My next step is to start on my wrist rehabilitation device. I've set 3 milestones for myself too, which are
-  1. Test each component individually (ESP32, buzzer, flex sensors, etc.)
-  2. Work on sensor integration and finding ranges
-  3. Set up a Bluetooth connection and real-time feedback system with a buzzer
-     
-I also plan to add some modifications, which include
-  1. Add vibration feedback in case the person wants silent updates from the device
-  2. Create a progress tracking system that shows updates or improvements over time
-  3. Add a small screen that shows live data on the wrist sleeve
-
-
- # Schematics 
-<!--Here's where you'll put images of your schematics. [Tinkercad](https://www.tinkercad.com/blog/official-guide-to-tinkercad-circuits) and [Fritzing](https://fritzing.org/learning/) are both great resoruces to create professional schematic diagrams, though BSE recommends Tinkercad becuase it can be done easily and for free in the browser. --->
-
-<img src="bluestamp schematic.png" alt="Alt Text" width="800" height="500">
-The image above is a schematic I used for my first and second milestone.
-
-<!--- # Code
-Here's where you'll put your code. The syntax below places it into a block of code. Follow the guide [here]([url](https://www.markdownguide.org/extended-syntax/)) to learn how to customize it to your project needs. 
-
-```c++
-void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(9600);
-  Serial.println("Hello World!");
-}
-
-void loop() {
-  // put your main code here, to run repeatedly:
-
-}
-```
-
-# Bill of Materials
+<!-- # Bill of Materials
 Here's where you'll list the parts in your project. To add more rows, just copy and paste the example rows below.
 Don't forget to place the link of where to buy each component inside the quotation marks in the corresponding row after href =. Follow the guide [here]([url](https://www.markdownguide.org/extended-syntax/)) to learn how to customize this to your project needs. 
 

@@ -44,6 +44,9 @@ For your second milestone, explain what you've worked on since your previous mil
 - Previous challenges you faced that you overcame
 - What needs to be completed before your final milestone -->
 
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/dAKtcRCgfs4?si=HONM-ibQDgTX6WsO" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 **Description:**
 For my second milestone, I focused on finding and testing ranges for the flex sensor and accelerometer to measure wrist movement accurately for my rehabilitation device. I programmed the flex sensor to calculate wrist bend angles between 0° and 90°, with flat and fully bent readings of 2000 and 2900, respectively. I chose the value of 2450 for the flex sensor because it represents the midpoint (45°) between flat and fully bent positions. The if loop runs continuously and checks to see if the sensor is bent past the value assigned. This ensures the buzzer activates when the wrist bends beyond approximately halfway through its motion range especially before reaching uncomfortable or unsafe positions. The code I made for the accelerometer was to collect 10 consecutive readings of the X, Y, and Z axes, calculate their averages, and detect key tilt positions based on those averages. The main purpose of the averages was to get rid of inaccuracies  found wrist tilt positions corresponding to X values of about -7 m/s² when bent downward and 4.6 m/s² when bent upward. If the wrist moves outside these ranges, the buzzer buzzes. Together, these components allow the system to track wrist motion precisely and give immediate feedback to guide proper rehab movements.
 
@@ -53,9 +56,11 @@ One of the biggest challenges I faced was getting the flex sensor and accelerome
 **Next steps:**
 My next step is to assemble all the components into a wearable prototype. After assembling, I plan to test the device during wrist exercises to evaluate how accurately it detects motion and provides feedback in real-time. I will observe whether the buzzer alerts at the right times and adjust the calibration ranges if needed to improve accuracy and comfort.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/dAKtcRCgfs4?si=HONM-ibQDgTX6WsO" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 
 # First Milestone
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/UymND75sh6g?si=2zHMyf4AibszDAVQ&amp;start=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 <!-- **Don't forget to replace the text below with the embedding for your milestone video. Go to Youtube, click Share -> Embed, and copy and paste the code to replace what's below.**
 
@@ -82,7 +87,7 @@ The biggest challenge I faced was that the accelerometer's test code wasn't work
 My next step is to work on milestone 2 which is to work on sensor integration and find ranges. I need to research about the correct and incorrect angles to bend your wrist at and add my information into my flex sensor and accelerator code.
 
 <img src="Bluestamp_1.jpg" alt="Alt Text" width="600" height="500"> 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/UymND75sh6g?si=2zHMyf4AibszDAVQ&amp;start=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 
 # Starter Project
 

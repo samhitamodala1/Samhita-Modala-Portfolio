@@ -31,6 +31,16 @@ For your final milestone, explain the outcome of your project. Key details to in
 - What you hope to learn in the future after everything you've learned at BSE -->
 
 
+**Description:**
+  For my final milestone, I improved my wrist rehabilitation device by adding Bluetooth communication, a rep tracking system, and vibration-based feedback. These changes made the device more interactive and wearable for real-time use. I used the ESP32’s built-in Bluetooth Low Energy (BLE) with the BleSerial library to set up a wireless connection between my device and my phone. Depending on the command the user types — such as "start", "progress", or "stoprep" — the ESP32 switches modes and either sends live sensor data or tracks wrist repetitions. This gives users the ability to see live wrist angles and motion, or just monitor their progress while exercising. The rep counter used X-axis acceleration data from the LSM6DS3 accelerometer to count how many full wrist lifts were done safely. When the X-value went above 4.6, it marked the start of a rep, and when it went below -3.6, it completed the rep. I added logic to make sure reps only counted once per full up-and-down motion. The ESP32 sent the current count to the phone via Bluetooth after each rep. Additionally, I introduced real-time calculations of roll, pitch, and yaw to better understand the wrist’s orientation. These were calculated using the accelerometer and gyroscope data to determine if the wrist was tilted too far in any direction. If the flex angle went over 45°, or if the pitch or roll exceeded safe thresholds (pitch ≥ 25° or ≤ -46°, roll ≥ 35° or ≤ -25°), the device triggered a vibration motor connected to pin 23. This provided discreet, haptic feedback to the user without needing a buzzer.
+
+**Challenges:**
+  One of the biggest issues I ran into was with the rep counter. In early versions, every time I performed a single wrist rep, the system would count 4 or 5 reps instead of just one. This happened because the accelerometer data fluctuated rapidly around the threshold, and the code was registering each small movement as a new rep. To fix this, I added a control flag (inRep) to make sure a rep was only counted after a full motion cycle (above 4.6, then below -3.6). This reduced false positives and made the counter much more accurate.
+  Another challenge came from working with roll, pitch, and yaw. While I successfully calculated the values using sensor fusion, I had trouble getting them to graph properly in the Arduino Serial Plotter. They either didn’t appear at all or showed up inconsistently. This made it difficult to visually analyze the data. I also initially used incorrect thresholds for detecting risky tilt angles, so the vibration motor would either not activate when it should or buzz constantly. I had to adjust the pitch and roll threshold ranges several times based on trial and error and live testing until they gave consistent feedback.
+
+**Next Steps:**
+  With all main features working, my next steps include making the device fully wearable by sewing on all components (the ESP32, flex sensor, accelerometer, and vibration motor) onto a wrist sleeve. I also plan to clean and optimize the code, including removing unused variables for better readability. 
+
 
 # Second Milestone
 

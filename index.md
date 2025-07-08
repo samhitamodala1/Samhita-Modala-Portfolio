@@ -48,13 +48,23 @@ For your second milestone, explain what you've worked on since your previous mil
 <iframe width="560" height="315" src="https://www.youtube.com/embed/dAKtcRCgfs4?si=HONM-ibQDgTX6WsO" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 **Description:**
-For my second milestone, I focused on finding and testing ranges for the flex sensor and accelerometer to measure wrist movement accurately for my rehabilitation device. I programmed the flex sensor to calculate wrist bend angles between 0° and 90°, with flat and fully bent readings of 2000 and 2900, respectively. I chose the value of 2450 for the flex sensor because it represents the midpoint (45°) between flat and fully bent positions. The if loop runs continuously and checks to see if the sensor is bent past the value assigned. This ensures the buzzer activates when the wrist bends beyond approximately halfway through its motion range especially before reaching uncomfortable or unsafe positions. The code I made for the accelerometer was to collect 10 consecutive readings of the X, Y, and Z axes, calculate their averages, and detect key tilt positions based on those averages. The main purpose of the averages was to get rid of inaccuracies  found wrist tilt positions corresponding to X values of about -7 m/s² when bent downward and 4.6 m/s² when bent upward. If the wrist moves outside these ranges, the buzzer buzzes. Together, these components allow the system to track wrist motion precisely and give immediate feedback to guide proper rehab movements.
+  For my second milestone, I focused on finding and testing ranges for the flex sensor and accelerometer to measure wrist movement accurately for my rehabilitation device. I used the analogRead() function to read values from the flex sensor because it outputs analog signals based on how much the sensor is bent. This function converts those signals into numeric values (ranging from 0 to 4095 on the ESP32) using the formula below which is needed for calculations in the code.
+
+```c++
+ float angle = (float)(flexValue - flatValue) * 90.0 / (bentValue - flatValue);    // converts angle into degrees 
+```
+
+  I programmed the flex sensor to calculate wrist bend angles between 0° and 90°, with flat and fully bent readings of 2000 and 2900, respectively because these were the values I received after multiple tests for ranges. I chose the value of 2450 for the flex sensor because it represents the midpoint (45°) between flat and fully bent positions. The if loop runs continuously and checks to see if the sensor is bent past the value assigned. This ensures the buzzer activates when the wrist bends beyond approximately halfway through its motion range especially before reaching uncomfortable or unsafe positions.
+  For the accelerometer, I programmed the system to collect 10 readings from each of the X, Y, and Z axes and calculate the average of each to condense the rough values. I focused only on the X-axis because it most clearly reflected wrist tilt during flexion and extension. Through testing, I found that downward wrist bending usually gave an X-value of around -3.6, while upward movement stayed around 4.6. The buzzer is triggered when the X value goes outside these safe ranges. Together, these components allow the system to track wrist motion precisely and give immediate feedback to guide proper rehab movements.
+
 
 **Challenges:**
-One of the biggest challenges I faced was getting the flex sensor and accelerometer to work together smoothly. Debugging was tricky because even small mistakes in timing or the way I averaged the data caused the buzzer to go off at the wrong times or not at all. Since each sensor sensitively responded at different speeds, I had to spend time adjusting values. Another tough part was making sure the angles calculated from the flex sensor actually matched real wrist positions. I also had to do a good amount of research to find threshold values that consistently told the difference between safe wrist movements and ones that might be risky.
+  One of the biggest challenges I faced was getting the flex sensor and accelerometer to work together smoothly. They each react at different speeds, and small mistakes in timing or averaging caused the buzzer to activate incorrectly or not at all. I had to spend time to refine the logic to make both sensors communicate without interference.
+  Another challenge was making sure the angle values from the flex sensor actually matched real wrist positions. I manually tested the sensor by measuring my wrist at different bend points and comparing those to the calculated angles in the code. I also had to do research to find threshold values that consistently distinguished safe movements from risky ones. This helped me come up with reliable threshold ranges for both the flex sensor and accelerometer.
+
 
 **Next steps:**
-My next step is to assemble all the components into a wearable prototype. After assembling, I plan to test the device during wrist exercises to evaluate how accurately it detects motion and provides feedback in real-time. I will observe whether the buzzer alerts at the right times and adjust the calibration ranges if needed to improve accuracy and comfort.
+  My next step is to assemble all the components into a wearable prototype. After assembling, I plan to test the device during wrist exercises to evaluate how accurately it detects motion and provides feedback in real-time. I will observe whether the buzzer alerts at the right times and adjust the calibration ranges if needed to improve accuracy and comfort.
 
 
 
@@ -78,13 +88,13 @@ For my first milestone, I tested each component individually and figured out how
 - Accelerometer
 - Buzzer
 
-The wrist rehab device uses three main components: a flex sensor, an accelerometer, and a buzzer, all connected to a device called the ESP 32. The flex sensor checks how much the wrist is bent. It works by using a basic electrical setup called a voltage divider, which just means the sensor and another resistor split up the power. Ohms law says that V = I x R (voltage = current x resistance) so when the resistance changes, the voltage also changes. The ESP 32 reads that voltage to figure out how much the wrist is bending. Bigger numbers usually mean more bending. The accelerometer is a motion sensor that measures how fast the wrist moves in three directions: left/right (x), up/down (y), and forward/back (z). The code turns the values into angles, like 40 degrees, to show how tilted the wrist is. The buzzer is the part that makes a sound when the wrist bends too much. If bent too much or the sensor value gets too high (in my code i set this value to 2500 or greater), the buzzer buzzes.
+  The wrist rehab device uses three main components: a flex sensor, an accelerometer, and a buzzer, all connected to a device called the ESP 32. The flex sensor checks how much the wrist is bent. It works by using a basic electrical setup called a voltage divider, which just means the sensor and another resistor split up the power. Ohms law says that V = I x R (voltage = current x resistance) so when the resistance changes, the voltage also changes. The ESP 32 reads that voltage to figure out how much the wrist is bending. Bigger numbers usually mean more bending. The accelerometer is a motion sensor that measures how fast the wrist moves in three directions: left/right (x), up/down (y), and forward/back (z). The code turns the values into angles, like 40 degrees, to show how tilted the wrist is. The buzzer is the part that makes a sound when the wrist bends too much. If bent too much or the sensor value gets too high (in my code i set this value to 2500 or greater), the buzzer buzzes.
 
 **Challenges:**
-The biggest challenge I faced was that the accelerometer's test code wasn't working because the code was for a different type of accelerometer and there wasn't any exisiting code to test it so I had to get multiple parts of code from different areas and put it together. There were also multiple libraries I had to download to run the test code. 
+  The biggest challenge I faced was that the accelerometer's test code wasn't working because the code was for a different type of accelerometer and there wasn't any exisiting code to test it so I had to get multiple parts of code from different areas and put it together. There were also multiple libraries I had to download to run the test code. 
 
 **Next Steps:**
-My next step is to work on milestone 2 which is to work on sensor integration and find ranges. I need to research about the correct and incorrect angles to bend your wrist at and add my information into my flex sensor and accelerator code.
+  My next step is to work on milestone 2 which is to work on sensor integration and find ranges. I need to research about the correct and incorrect angles to bend your wrist at and add my information into my flex sensor and accelerator code.
 
 <img src="Bluestamp_1.jpg" alt="Alt Text" width="600" height="500"> 
 
@@ -99,10 +109,10 @@ My next step is to work on milestone 2 which is to work on sensor integration an
 <!--- What your plan is to complete your project -->
 
 **Description:**
-This is my starter project. It is a retro arcade console, and the reason I picked this is because I felt like it interested me the most. Basically, once you press the red button to turn it on, you can click the left and right yellow buttons, which change the games. As you can see, there are multiple games you can play. Some games you can play are Tetris, Snake, etc., etc. Some components in this project are, of course, the buttons, the score tracker in the top right, the port for connecting it to a computer, a buzzer, a battery pack, the clear plastic frame, and so much more. 
+  This is my starter project. It is a retro arcade console, and the reason I picked this is because I felt like it interested me the most. Basically, once you press the red button to turn it on, you can click the left and right yellow buttons, which change the games. As you can see, there are multiple games you can play. Some games you can play are Tetris, Snake, etc., etc. Some components in this project are, of course, the buttons, the score tracker in the top right, the port for connecting it to a computer, a buzzer, a battery pack, the clear plastic frame, and so much more. 
 
 **Challenge:**
-The biggest challenge I faced was soldering. It was not only tedious but also difficult, as the holes were pretty close to each other, which caused soldered parts to touch. I messed up the soldering for the battery pack, so I had to remove the solder and redo it, but it worked great after that.
+  The biggest challenge I faced was soldering. It was not only tedious but also difficult, as the holes were pretty close to each other, which caused soldered parts to touch. I messed up the soldering for the battery pack, so I had to remove the solder and redo it, but it worked great after that.
 
 **Next Steps:**
 My next step is to start on my wrist rehabilitation device. I've set 3 milestones for myself too, which are

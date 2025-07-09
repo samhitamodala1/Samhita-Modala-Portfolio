@@ -43,7 +43,6 @@ For your final milestone, explain the outcome of your project. Key details to in
 **Next Steps:**
   My next steps include making the device fully wearable by sewing on all components (the ESP32, flex sensor, accelerometer, and vibration motor) onto a wrist sleeve. I also plan to clean and optimize the code, including removing unused variables for better readability. 
 
-<img src="milestone 3 schematic.png" alt="Alt Text" width="600" height="500"> 
 
 # Second Milestone
 
@@ -146,9 +145,292 @@ I also plan to add some modifications, which include
 <img src="bluestamp schematic.png" alt="Alt Text" width="800" height="500">
 The image above is a schematic I used for my first and second milestone.
 
+<img src="milestone 3 schematic.png" alt="Alt Text" width="600" height="500"> 
+The image above is a schematic I used for my third milestone.
+
+
 <!--- # Code
 Here's where you'll put your code. The syntax below places it into a block of code. Follow the guide [here]([url](https://www.markdownguide.org/extended-syntax/)) to learn how to customize it to your project needs. -->
 
+**all code from milestone 3:**
+```c++
+#include <Adafruit_LSM6DS3TRC.h>
+#include <BleSerial.h>
+#include <MadgwickAHRS.h>
+Adafruit_LSM6DS3TRC lsm6ds;
+BleSerial BLE; 
+
+float accelXValues[10];
+float accelYValues[10];
+float accelZValues[10];
+const int LED = 2;
+
+int count = 0;
+float sumX = 0;
+float sumY = 0;
+float sumZ = 0;
+float avgX = 0;
+float avgY = 0;
+float avgZ = 0;
+const int bentUp = 4.6;                                               // accelerometer value when tilted up
+const int bentDown = -5;                                              // accelerometer value when tilted down
+const int flexPin = 34;                 // pin where flex sensor wire is connected
+//const int buzzerPin = 23;              // pin where buzzer is connected
+const int motorPin = 23;
+const int flatValue = 2000;           //flat value of unbent flex sensor
+const int bentValue = 2900;            // bent value of bent flex sensor
+bool repMode = false;
+bool wristUp = false;
+int repCount = 0;
+
+
+String message = "";
+String command = "";
+bool codeRunning = false;
+bool wristRep = false;
+
+Madgwick filter;
+unsigned long microsPerReading, microsPrevious;
+float accelScale, gyroScale;
+
+void setup(void) {
+  Serial.begin(115200);
+  BLE.begin("Samhita's values");
+  while (!Serial) delay(1);
+  //pinMode(buzzerPin, OUTPUT);
+  pinMode(motorPin, OUTPUT);
+  pinMode(LED,OUTPUT);
+
+  Serial.println("Adafruit LSM6DS Accelerometer Only");
+
+  if (!lsm6ds.begin_I2C()) {
+    Serial.println("Failed to find LSM6DS chip");
+    while (1) delay(100);
+  }
+
+  Serial.println("LSM6DS Found!");
+  Serial.println("Waiting for 'start'");
+  BLE.println("Waiting for 'start'");
+  filter.begin(25);
+  microsPerReading = 1000000 / 25;
+  microsPrevious = micros();
+}
+
+void loop() {
+  int gix, giy, giz;
+  float ax, ay, az;
+  float gx, gy, gz;
+  float roll, pitch, yaw;
+  unsigned long microsNow;
+if (BLE.available()) {
+  message = BLE.readStringUntil('\n');
+  command = message;
+
+  if (command == "start") {
+    if (!codeRunning) {
+      if (repMode) { 
+      Serial.println("Stopping rep mode before displaying regular values");
+      BLE.println("Stopping rep mode before displaying regular values");
+      repMode = false;
+      }
+      Serial.println("starting code...");
+      BLE.println("starting code...");
+      codeRunning = true;
+      
+      } else {
+      Serial.println("Code already running.");
+      BLE.println("Code already running.");
+      }
+    }
+
+  if (command == "stop") {
+    if (codeRunning) {
+      Serial.println("stopping code...");
+      BLE.println("stopping code...");
+      codeRunning = false;
+      } else {
+      Serial.println("Code is not running.");
+      BLE.println("Code is not running.");
+      }
+    }
+
+
+  if (command == "progress") {
+    if (!repMode) {
+      if (codeRunning) { 
+      Serial.println("Stopping regular values before entering rep mode.");
+      BLE.println("Stopping regular values before entering rep mode.");
+      codeRunning = false;
+    }
+      Serial.println("Entering rep mode.");
+      BLE.println("Entering rep mode.");
+      repMode = true;
+      repCount = 0;
+    } else {
+      Serial.println("already in rep mode");
+      BLE.println("already in rep mode");
+    }
+  }
+
+  if (command == "stoprep") {
+    if (repMode) {
+      Serial.println("exiting rep mode... ");
+      BLE.println("exiting rep mode... ");
+      Serial.print("total reps done: ");
+      Serial.print(repCount);
+      BLE.print("total reps done: ");
+      BLE.print(repCount);
+      repMode = false;
+    } else {
+      Serial.println("not in rep mode right now");
+      BLE.println("not in rep mode right now");
+    }
+  } 
+}
+  
+if (repMode) {
+  sensors_event_t accel;
+  lsm6ds.getAccelerometerSensor()->getEvent(&accel);
+
+Serial.println(accel.acceleration.x);
+  if (accel.acceleration.x >= 4.6) {
+    if (!wristUp) {
+      wristUp = true;
+      repCount++;
+      Serial.print("Progress: ");
+      Serial.println(repCount);
+      BLE.print("Rep Count: ");
+      BLE.println(repCount);
+      delay(200);
+      Serial.println(repMode);
+      
+    }
+  } else if (accel.acceleration.x <= -3.6){
+    wristUp = false;
+  }
+
+
+
+}
+
+  if (codeRunning) {
+    sensors_event_t accel;
+    lsm6ds.getAccelerometerSensor()->getEvent(&accel);
+    Serial.print("  Reading ");                                               // commented to test roll pitch yaw
+  Serial.print(count + 1);
+  Serial.print(": X = ");
+  Serial.print(accel.acceleration.x);                                   // prints the x value reading
+  Serial.print(", Y = ");
+  Serial.print(accel.acceleration.y);                                   // prints the y value reading
+  Serial.print(", Z = ");
+  Serial.println(accel.acceleration.z);                                 // prints the z value reading
+  BLE.print("  Reading ");
+  BLE.print(count + 1);
+  BLE.print(": X = ");
+  BLE.print(accel.acceleration.x);                                   // prints the x value reading
+  BLE.print(", Y = ");
+  BLE.print(accel.acceleration.y);                                   // prints the y value reading
+  BLE.print(", Z = ");
+  BLE.println(accel.acceleration.z);                                 // prints the z value reading
+
+
+ microsNow = micros();
+  if (microsNow - microsPrevious >= microsPerReading) {
+
+  sensors_event_t accel;
+  sensors_event_t gyro;
+  sensors_event_t temp;
+  lsm6ds.getEvent(&accel, &gyro, &temp);
+
+ //convert from raw data to gravity and degrees/second units
+    ax = convertRawAcceleration(accel.acceleration.x);
+    ay = convertRawAcceleration(accel.acceleration.y);
+    az = convertRawAcceleration(accel.acceleration.z);
+    gx = convertRawGyro(gyro.gyro.x);
+    gy = convertRawGyro(gyro.gyro.y);
+    gz = convertRawGyro(gyro.gyro.z);
+
+    // update the filter, which computes orientation
+    filter.updateIMU(gx, gy, gz, accel.acceleration.x, accel.acceleration.y, accel.acceleration.z);
+
+    // print the yaw, pitch and roll
+    roll = filter.getRoll();
+    pitch = filter.getPitch();
+    yaw = filter.getYaw();
+    Serial.print("pitch: ");
+    Serial.print(pitch);
+    Serial.print(" roll: ");
+    Serial.println(roll);
+    // increment previous time, so we keep proper pace
+    microsPrevious = microsPrevious + microsPerReading;
+  }
+
+  count++;
+
+  sumX += accel.acceleration.x;
+  sumY += accel.acceleration.y;
+  sumZ += accel.acceleration.z;
+
+  int flexValue =analogRead(flexPin);
+
+  float angle = (float)(flexValue - flatValue) * 90.0 / (bentValue - flatValue);
+
+  angle = constrain(angle, 0, 90);
+
+
+ Serial.print("Sensor: ");
+  Serial.print(flexValue);                                                   // commented to test roll pitch and yaw
+  Serial.print("  →  Angle: ");
+  Serial.print(angle, 1);
+  Serial.println("°");
+ BLE.print("Sensor: ");
+  BLE.print(flexValue);
+  BLE.print("  →  Angle: ");
+  BLE.print(angle, 1);
+  BLE.println("°");
+
+
+  if (flexValue >= 2450) {                                      // if bent past ranges, buzzer will buzz
+    digitalWrite(motorPin, HIGH);
+  } else if (pitch>=25 || pitch<=-46) {
+    digitalWrite(motorPin, HIGH);
+  } else if (roll>=35 || roll<=-25) {
+    digitalWrite(motorPin, HIGH);
+  } else {
+    digitalWrite(motorPin, LOW);
+  }
+
+
+  if (count == 10) {
+    avgX = sumX / 10.0;
+    avgY = sumY / 10.0;
+    avgZ = sumZ / 10.0;
+    Serial.print("average x: ");
+    Serial.println(avgX);                                               // prints the average x value from 10 readings
+    Serial.print("average y: ");
+    Serial.println(avgY);                                               // prints the average y value from 10 readings
+    Serial.print("average z: ");
+    Serial.println(avgZ);                                               // prints the average z value from 10 readings
+    count = 0;
+    sumX = 0;                                                           // resets the x,y, and z values to 0 to rerun the code
+    sumY = 0;                                                           
+    sumZ = 0;                                                           
+  }
+
+  }
+}
+
+
+float convertRawAcceleration(float aRaw) {
+  return aRaw;
+}
+
+float convertRawGyro(float gRaw) {
+  
+  float g = (gRaw *180)/3.141;//change to degreees!!
+  return g;
+} 
+```
 
 **flex sensor code:**
 ```c++

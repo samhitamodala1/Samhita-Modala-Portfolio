@@ -174,11 +174,11 @@ float avgY = 0;
 float avgZ = 0;
 const int bentUp = 4.6;                                               // accelerometer value when tilted up
 const int bentDown = -5;                                              // accelerometer value when tilted down
-const int flexPin = 34;                 // pin where flex sensor wire is connected
-//const int buzzerPin = 23;              // pin where buzzer is connected
+const int flexPin = 34;                                               // pin where flex sensor wire is connected
+//const int buzzerPin = 23;                                           // pin where buzzer is connected
 const int motorPin = 23;
-const int flatValue = 2000;           //flat value of unbent flex sensor
-const int bentValue = 2900;            // bent value of bent flex sensor
+const int flatValue = 2000;                                           //flat value of unbent flex sensor
+const int bentValue = 2900;                                           // bent value of bent flex sensor
 bool repMode = false;
 bool wristUp = false;
 int repCount = 0;
@@ -548,6 +548,13 @@ lsm6ds.getAccelerometerSensor()->getEvent(&accel);
 }
 
 ```
+
+**How It Works**
+Flex Sensor
+Accelerometer
+Vibration Motor
+ESP 32
+
 
 <!-- # Bill of Materials
 Here's where you'll list the parts in your project. To add more rows, just copy and paste the example rows below.

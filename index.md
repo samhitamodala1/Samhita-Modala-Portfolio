@@ -549,12 +549,35 @@ lsm6ds.getAccelerometerSensor()->getEvent(&accel);
 
 ```
 
-**How It Works**
-Flex Sensor
-Accelerometer
-Vibration Motor
-ESP 32
+#How It Works
 
+
+**Flex Sensor**
+
+
+<img src="FlexSensor-HowItWorks.png" alt="Alt Text" width="600" height="500">
+
+
+<img src="FlexSensor-HowItWorks2.png" alt="Alt Text" width="600" height="500">
+
+A flex sensor is a sensor that changes its electrical resistance when bent. When the bending angle increases, the resistance also increases. As shown in the pictures, when the flex sensor is bent, it displays around 70k Ohms and when it's straight it shows around 30k Ohms. The flex sensor bends in one direction which is away from the side with lines.
+**Accelerometer**
+
+
+<img src="Accelerometer-HowItWorks.jpg" alt="Alt Text" width="600" height="500">
+
+
+<img src="Accelerometer-HowItWorks2.jpg" alt="Alt Text" width="600" height="500">
+
+**Vibration Motor**
+
+
+<img src="VibrationMotor-HowItWorks.png" alt="Alt Text" width="600" height="500">
+
+**ESP 32**
+
+
+<img src="ESP32-HowItWorks.webp" alt="Alt Text" width="600" height="500">
 
 <!-- # Bill of Materials
 Here's where you'll list the parts in your project. To add more rows, just copy and paste the example rows below.

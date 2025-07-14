@@ -108,7 +108,7 @@ For my first milestone, I tested each component individually and figured out how
 **Next Steps:**
   My next step is to work on milestone 2 which is to work on sensor integration and find ranges. I need to research about the correct and incorrect angles to bend your wrist at and add my information into my flex sensor and accelerator code.
 
-<img src="Bluestamp_1.jpg" alt="Alt Text" width="600" height="500"> 
+<img src="Bluestamp_1.jpg" alt="Alt Text" width="600" height="500"> (figure 1)
 
 
 # Starter Project
@@ -142,10 +142,10 @@ I also plan to add some modifications, which include
  # Schematics 
 <!--Here's where you'll put images of your schematics. [Tinkercad](https://www.tinkercad.com/blog/official-guide-to-tinkercad-circuits) and [Fritzing](https://fritzing.org/learning/) are both great resoruces to create professional schematic diagrams, though BSE recommends Tinkercad becuase it can be done easily and for free in the browser. --->
 
-<img src="bluestamp schematic.png" alt="Alt Text" width="800" height="500">
+<img src="bluestamp schematic.png" alt="Alt Text" width="800" height="500"> (figure 2)
 The image above is a schematic I used for my first and second milestone.
 
-<img src="milestone 3 schematic.png" alt="Alt Text" width="600" height="500"> 
+<img src="milestone 3 schematic.png" alt="Alt Text" width="600" height="500"> (figure 3)
 The image above is a schematic I used for my third milestone.
 
 
@@ -555,43 +555,43 @@ lsm6ds.getAccelerometerSensor()->getEvent(&accel);
 **Flex Sensor**
 
 
-<img src="FlexSensor-HowItWorks.png" alt="Alt Text" width="600" height="500">
+<img src="FlexSensor-HowItWorks.png" alt="Alt Text" width="600" height="500"> (figure 4)
 
 
-<img src="FlexSensor-HowItWorks2.png" alt="Alt Text" width="600" height="500">
+<img src="FlexSensor-HowItWorks2.png" alt="Alt Text" width="600" height="500"> (figure 5)
 
-A flex sensor is a sensor that changes its electrical resistance when bent. When the bending angle increases, the resistance also increases. As shown in the pictures, when the flex sensor is bent, it displays around 70k Ohms and when it's straight it shows around 30k Ohms. The flex sensor bends in one direction which is away from the side with lines.
+A flex sensor is a sensor that changes its electrical resistance when bent. When the bending angle increases, the resistance also increases. As shown in the pictures, when the flex sensor is bent, it displays around 70k Ohms (figure 4) and when it's straight it shows around 30k Ohms (figure 5). The flex sensor bends in one direction which is away from the side with lines. I used it to detect incorrect wrist positions and provide feedback when the bent angle exceeded the safe limits.
 
 **Buzzer**
 
 
-image
+<img src="Buzzer-HowItWorks.png" alt="Alt Text" width="600" height="500"> (figure 6)
 
-text
+A buzzer creates a sound by rapidly vibrating a piece within its casing. This vibration generates sound waves that we perceive as a buzz. I used a vibration motor instead of a buzzer because I didn't like the noise and I wanted silent feedback but this piece is useful too.
 
 **Accelerometer**
 
 
-<img src="Accelerometer-HowItWorks3.webp" alt="Alt Text" width="600" height="500">
+<img src="Accelerometer-HowItWorks3.webp" alt="Alt Text" width="600" height="500"> (figure 7)
 
 
-<img src="Accelerometer-HowItWorks.jpg" alt="Alt Text" width="600" height="500">
+<img src="Accelerometer-HowItWorks.jpg" alt="Alt Text" width="600" height="500"> (figure 8)
+
+The accelerometer I used was an lsm6ds3 accelerometer which has a 3D digital accelerometer and a 3D digital gyroscope. It measures linear acceleration and angular rate along the X, Y, and Z axes (as shown in figure 8). The accelerometer detects changes in motion and orientation, while the gyroscope detects rotational motion. In my project I used it to detect rep count based on wrist tilt. It also monitored wrist form and gave feedback if the wrist was bent out of ranges. 
+
 **Vibration Motor**
 
-The accelerometer I used was an lsm6ds3 accelerometer which has a 3D digital accelerometer and a 3D digital gyroscope. It measures linear acceleration and angular rate along the X, Y, and Z axes (as shown in the second picture). The accelerometer detects changes in motion and orientation, while the gyroscope detects rotational motion.
 
-**Vibration Motor**
+<img src="VibrationMotor-HowItWorks.png" alt="Alt Text" width="600" height="500"> (figure 9)
 
+I used a vibration motor in my device for silent feedback. When powered, the motor spins rapidly. The offset weight causes the motor to wobble or move from side to side as it rotates which causes what we perceive as vibrations. The faster the motor spins, the more intense the vibration. I used it to provide haptic feedback when the wrist was bent incorrectly.
 
-<img src="VibrationMotor-HowItWorks.png" alt="Alt Text" width="600" height="500">
-
-I used a vibration motor in my device for silent feedback. When powered, the motor spins rapidly. The offset weight causes the motor to wobble or move from side to side as it rotates which causes what we perceive as vibrations. The faster the motor spins, the more intense the vibration.
 **ESP 32**
 
 
-<img src="ESP32-HowItWorks.webp" alt="Alt Text" width="600" height="500">
+<img src="ESP32-HowItWorks.webp" alt="Alt Text" width="600" height="500"> (figure 10)
 
-The ESP32 is a low-power system-on-a-chip microcontroller with integrated Wi-Fi and Bluetooth capabilities. The built-in Wi-Fi and Bluetooth modules enable the ESP32 to connect to networks, communicate with other devices, and access online resources. 
+The ESP32 is a low-power system-on-a-chip microcontroller with integrated Wi-Fi and Bluetooth capabilities. The built-in Wi-Fi and Bluetooth modules enable the ESP32 to connect to networks, communicate with other devices, and access online resources. In my project, it connected all my parts and comminicated through bluetooth with my phone. It calculated vibration feedback and also roll, pitch, and yaw.
 
 <!-- # Bill of Materials
 Here's where you'll list the parts in your project. To add more rows, just copy and paste the example rows below.
@@ -602,6 +602,12 @@ Don't forget to place the link of where to buy each component inside the quotati
 | Item Name | What the item is used for | $Price | <a href="https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/"> Link </a> |
 | Item Name | What the item is used for | $Price | <a href="https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/"> Link </a> |
 | Item Name | What the item is used for | $Price | <a href="https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/"> Link </a> |
+| Item Name | What the item is used for | $Price | <a href="https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/"> Link </a> |
+| Item Name | What the item is used for | $Price | <a href="https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/"> Link </a> |
+| Item Name | What the item is used for | $Price | <a href="https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/"> Link </a> |
+| Item Name | What the item is used for | $Price | <a href="https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/"> Link </a> |
+
+
 
 # Other Resources/Examples
 One of the best parts about Github is that you can view how other people set up their own work. Here are some past BSE portfolios that are awesome examples. You can view how they set up their portfolio, and you can view their index.md files to understand how they implemented different portfolio components.

@@ -561,23 +561,37 @@ lsm6ds.getAccelerometerSensor()->getEvent(&accel);
 <img src="FlexSensor-HowItWorks2.png" alt="Alt Text" width="600" height="500">
 
 A flex sensor is a sensor that changes its electrical resistance when bent. When the bending angle increases, the resistance also increases. As shown in the pictures, when the flex sensor is bent, it displays around 70k Ohms and when it's straight it shows around 30k Ohms. The flex sensor bends in one direction which is away from the side with lines.
+
+**Buzzer**
+
+
+image
+
+text
+
 **Accelerometer**
 
 
+<img src="Accelerometer-HowItWorks3.webp" alt="Alt Text" width="600" height="500">
+
+
 <img src="Accelerometer-HowItWorks.jpg" alt="Alt Text" width="600" height="500">
+**Vibration Motor**
 
-
-<img src="Accelerometer-HowItWorks2.jpg" alt="Alt Text" width="600" height="500">
+The accelerometer I used was an lsm6ds3 accelerometer which has a 3D digital accelerometer and a 3D digital gyroscope. It measures linear acceleration and angular rate along the X, Y, and Z axes (as shown in the second picture). The accelerometer detects changes in motion and orientation, while the gyroscope detects rotational motion.
 
 **Vibration Motor**
 
 
 <img src="VibrationMotor-HowItWorks.png" alt="Alt Text" width="600" height="500">
 
+I used a vibration motor in my device for silent feedback. When powered, the motor spins rapidly. The offset weight causes the motor to wobble or move from side to side as it rotates which causes what we perceive as vibrations. The faster the motor spins, the more intense the vibration.
 **ESP 32**
 
 
 <img src="ESP32-HowItWorks.webp" alt="Alt Text" width="600" height="500">
+
+The ESP32 is a low-power system-on-a-chip microcontroller with integrated Wi-Fi and Bluetooth capabilities. The built-in Wi-Fi and Bluetooth modules enable the ESP32 to connect to networks, communicate with other devices, and access online resources. 
 
 <!-- # Bill of Materials
 Here's where you'll list the parts in your project. To add more rows, just copy and paste the example rows below.

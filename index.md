@@ -152,6 +152,371 @@ The image above is a schematic I used for my third milestone.
 <!--- # Code
 Here's where you'll put your code. The syntax below places it into a block of code. Follow the guide [here]([url](https://www.markdownguide.org/extended-syntax/)) to learn how to customize it to your project needs. -->
 
+**final code from modifications and milestones**
+```c++
+#include <Adafruit_LSM6DS3TRC.h>
+#include <BleSerial.h>
+#include <MadgwickAHRS.h>
+
+Adafruit_LSM6DS3TRC lsm6ds;
+BleSerial BLE;
+Madgwick filter;
+
+//const int LED = 2;
+const int flexPin = 34;
+const int motorPin = 23;
+const int motorTwo = 19;
+int flatValue = 2000;                             // minimum value when the flex sensor is just straight up
+//int bentValue = 2900;                             // maximum value when the flex sensnor is bent 
+float bentUp = 4.6;                                 // maximum wrist bend up for flex sensor
+float bentDown = -5;                                // maximum wrist bend down for flex sensor
+int bentUpValue = 2900;
+int bentDownValue = 1800;
+
+bool repMode = false;
+bool wristUp = false;
+bool codeRunning = false;
+bool goalReached = false;
+bool formLimitIncreased = false;
+
+int repCount = 0;
+int bestSessionReps = 0;
+int repGoal = 0;
+int rollLimit = 35;                                     // roll limit set when code is first run (can increase once 50 reps are done)
+int pitchLimit = 25;                                    // pitch limit set when code is first run (can increase once 50 reps are done)
+
+String message = "";
+String command = "";
+
+float rollValue = 35;                                   // maximum roll value for accelerometer
+float pitchValue = 25;                                  // maximum pitch value for accelerometer
+
+unsigned long microsPerReading, microsPrevious;
+
+void setup() {
+  Serial.begin(115200);
+  BLE.begin("Samhita's values");
+
+  pinMode(motorPin, OUTPUT);
+  pinMode(motorTwo, OUTPUT);
+//  pinMode(LED, OUTPUT);
+
+  if (!lsm6ds.begin_I2C()) {
+    Serial.println("Failed to find LSM6DS chip");
+    while (1) delay(100);
+  }
+
+  Serial.println("LSM6DS Found!");
+  Serial.println("Waiting for a command.");
+  BLE.println("Waiting for a command.");
+
+  filter.begin(25);
+  microsPerReading = 1000000 / 25;
+  microsPrevious = micros();
+
+  printHelp();
+}
+
+void loop() {
+  // if (BLE.connected()) {                              // use to test if the bluetooth is connected or not
+  //   Serial.println("Bluetooth is connected");   
+  // }
+
+  if (BLE.available()) {
+    message = BLE.readStringUntil('\n');
+    command = message;
+    handleBLECommands();                                 // function for starting and stopping code
+  }
+
+  if (repMode) {
+    trackReps();                                         // function for tracking rep count when progress is typed
+  }
+
+  if (codeRunning) {
+    streamSensors();                                     // function for calculating flex sensor angle
+  }
+}
+
+void printHelp() {                                                               // commands shown when "help" is typed
+  BLE.println("Available Commands:");
+  BLE.println("start        → start data stream");
+  BLE.println("stop         → stop data stream");
+  BLE.println("progress     → enter rep tracking mode");
+  BLE.println("stop rep     → stop rep mode + show summary");
+  BLE.println("reset rep    → reset total rep count");
+  BLE.println("goal _#_     → creates a custom goal for reps");
+  BLE.println("status       → shows status of rehab features");
+  BLE.println("calibrate    → calibrate wrist values");
+}
+
+void handleBLECommands() {
+  if (command == "start") {
+    if (!codeRunning) {
+      if (repMode) {
+        repMode = false;
+        Serial.println("Stopping rep mode before displaying regular values");
+        BLE.println("Stopping rep mode before displaying regular values");
+
+      }
+      codeRunning = true;
+      Serial.println("Starting code...");
+      BLE.println("starting code...");
+    } else {
+      BLE.println("Code already running.");
+    }
+  }
+
+  if (command == "stop") {
+    if (codeRunning) {
+      codeRunning = false;
+      Serial.println("Stopping code...");
+      BLE.println("Stopping code...");
+    } else {
+      BLE.println("Code is not running.");
+    }
+  }
+
+  if (command == "status") {
+    BLE.println("STATUS REPORT:");
+    BLE.print("Reps Done: "); 
+    BLE.println(repCount);
+    BLE.print("Best Session: "); 
+    BLE.println(bestSessionReps);
+    BLE.print("Goal: "); 
+    BLE.println(repGoal);
+    BLE.print("Form limit increased?");
+    BLE.println(formLimitIncreased ? "Yes" : "No");                             // single line if else statement for status report
+  }
+
+  if (command == "reset rep") {
+    repCount = 0;
+    BLE.println("Rep count has been reset to 0!");
+  }
+
+  if (command == "help") {
+    printHelp();                                                                // prints the printHelp() commands above
+  }
+
+  if (command.startsWith("goal")) {
+    repGoal = command.substring(5).toInt();
+    goalReached = false;
+    BLE.print("Goal set to "); 
+    BLE.println(repGoal);
+  }
+
+  if (command == "progress") {
+    if (!repMode) {
+      if (codeRunning) {
+        codeRunning = false;
+        Serial.println("Stopping regular values before entering rep mode.");
+      }
+      repMode = true;
+      repCount = 0;
+      BLE.println("Entering rep mode.");
+    } else {
+      BLE.println("Already in rep mode.");
+    }
+  }
+
+  if (command == "stop rep") {
+    if (repMode) {
+      BLE.print("Total reps done: "); 
+      BLE.println(repCount);
+
+      if (repCount > bestSessionReps) {
+        bestSessionReps = repCount;
+        BLE.println("new rep record!");
+      }
+
+      repMode = false;
+    } else {
+      BLE.println("Not in rep mode right now.");
+    }
+  }
+
+  if (command == "calibrate") {
+    calculateFlexSensor();
+  }
+}
+//int flatValue = 2000;
+//int bentUpValue = 2900;
+//int bentDownValue = 1800;
+
+void calculateFlexSensor() {
+  int readings = 30;                                                  //takes 30 readings and takes an average to get a more precise value
+  int sum = 0;                                                        // variable which holds the sum of all readings
+
+  // Flat wrist calibration
+  BLE.println("Step 1: Keep your wrist FLAT.");
+  delay(3000);
+  sum = 0;                                                            // resets the sum before taking readings
+  for (int i = 0; i < readings; i=i+1) {                              // takes 30 readings
+    sum += analogRead(flexPin);                                       // reads flex sensor values then adds to the sum
+    delay(50);
+  }
+  flatValue = sum / readings;                                         // takes the average of the 30 readings
+  BLE.print("FLAT value set to: "); 
+  BLE.println(flatValue);
+
+  // Bent up calibration
+  BLE.println("Step 2: Bend your wrist as far UP as you can");
+  delay(3000);
+  sum = 0;                                                            // resets the sum before taking next readings
+  for (int i = 0; i < readings; i=i+1) {                              // repeats the above process and takes 30 readings
+    sum += analogRead(flexPin);                                       // reads flex sensor values then adds to the sum
+    delay(50);
+  }
+  bentUpValue = sum / readings;                                       // takes the average of the 30 readings
+  BLE.print("Bent UP value set to: "); 
+  BLE.println(bentUpValue);
+
+  // Bent down calibration
+  BLE.println("Step 3: Bend wrist as far DOWN as you can");           // repeats for bent down as well, its the same as the process above
+  delay(3000);
+  sum = 0;
+  for (int i = 0; i < readings; i=i+1) {
+    sum += analogRead(flexPin);
+    delay(50);
+  }
+  bentDownValue = sum / readings;
+  BLE.print("Bent DOWN value set to: "); 
+  BLE.println(bentDownValue);
+
+  BLE.println("Calibration complete!");                               // after calibration, it sets the bentUp and bentDown bounds to these calibrated values
+}
+
+void trackReps() {
+  sensors_event_t accel;
+  lsm6ds.getAccelerometerSensor()->getEvent(&accel);
+
+  if (accel.acceleration.x >= 4.6) {
+    if (!wristUp) {
+      wristUp = true;
+      repCount++;
+
+      if (!formLimitIncreased && repCount >= 50) {                               // once 50 reps are completed, it increases the limit values for wrist movement
+        pitchLimit = 35;
+        rollLimit = 45;
+        formLimitIncreased = true;
+        BLE.println("You finished 5 sets! Limits are now more flexible.");
+      }
+
+      BLE.print("Rep Count: "); 
+      BLE.println(repCount);
+
+      if (!goalReached && repGoal > 0 && repCount >= repGoal) {
+        goalReached = true;
+        BLE.println("Goal achieved!!");
+      }
+
+      if (repCount % 10 == 0) {
+        if (repCount/10 == 1) {
+          BLE.print("Congrats! You finished ");
+          BLE.print(repCount / 10);
+          BLE.println(" set");
+        } else {
+          BLE.print("Congrats! You finished ");
+          BLE.print(repCount / 10);
+          BLE.println(" sets");
+        }
+      }
+    }
+  } else if (accel.acceleration.x <= -3.6) {
+    wristUp = false;
+  }
+}
+
+void streamSensors() {
+  sensors_event_t accel;
+  lsm6ds.getAccelerometerSensor()->getEvent(&accel);
+
+  // Serial.print("Reading ");                                                    // prints the x, y, and z values from the accelerometer
+  // Serial.print(": X = ");
+  // Serial.print(accel.acceleration.x);
+  // Serial.print(", Y = ");
+  // Serial.print(accel.acceleration.y);
+  // Serial.print(", Z = ");
+  // Serial.println(accel.acceleration.z);
+
+  updateOrientation();
+
+  int flexValue = analogRead(flexPin);
+  float angle = (float)(flexValue - flatValue) * 90.0 / (bentUpValue - flatValue);    // converts the flex value to an angle in degrees
+  angle = constrain(angle, 0, 90);
+
+  Serial.print("Sensor: ");
+  Serial.print(flexValue);
+  Serial.print("  →  Angle: ");
+  Serial.print(angle, 1);
+  Serial.println("°");
+
+  activateMotor(accel.acceleration.x, pitchValue, rollValue, flexValue);
+}
+
+void updateOrientation() {
+  unsigned long microsNow = micros();
+  if (microsNow - microsPrevious >= microsPerReading) {
+    sensors_event_t accel, gyro, temp;
+    lsm6ds.getEvent(&accel, &gyro, &temp);
+
+    float ax = convertRawAcceleration(accel.acceleration.x);
+    float ay = convertRawAcceleration(accel.acceleration.y);
+    float az = convertRawAcceleration(accel.acceleration.z);
+
+    float gx = convertRawGyro(gyro.gyro.x);
+    float gy = convertRawGyro(gyro.gyro.y);
+    float gz = convertRawGyro(gyro.gyro.z);
+
+    filter.updateIMU(gx, gy, gz, ax, ay, az);
+
+    rollValue = filter.getRoll();                                                   // gets roll values and prints
+    pitchValue = filter.getPitch();                                                 // gets pitch values and prints
+
+    Serial.print("Pitch: ");
+    Serial.print(pitchValue);
+    Serial.print(", Roll: ");
+    Serial.println(rollValue);
+
+    microsPrevious += microsPerReading;
+  }
+}
+
+void activateMotor(float accelX, float pitch, float roll, int flexValue) {
+  if (flexValue >= bentUpValue || flexValue <= bentDownValue) {  
+    digitalWrite(motorPin, HIGH);
+    digitalWrite(motorTwo, HIGH);
+  }
+  else if (accelX >= bentUp || accelX <= bentDown) {             
+    digitalWrite(motorPin, HIGH);
+    digitalWrite(motorTwo, HIGH);
+  }
+  else if (pitch >= pitchLimit || pitch <= -pitchLimit) {       
+    digitalWrite(motorPin, HIGH);
+    digitalWrite(motorTwo, HIGH);
+  }
+  else if (roll >= rollLimit || roll <= -rollLimit) {            
+    digitalWrite(motorPin, HIGH);
+    digitalWrite(motorTwo, HIGH);
+  } 
+  else {
+    digitalWrite(motorPin, LOW);
+    digitalWrite(motorTwo, LOW);
+  }
+}
+
+
+float convertRawAcceleration(float aRaw) {
+  return aRaw;
+}
+
+float convertRawGyro(float gRaw) {
+  return (gRaw * 180) / 3.141;                                                      // converts to degrees
+}
+
+```
+
+
+
 **all code from milestone 3:**
 ```c++
 #include <Adafruit_LSM6DS3TRC.h>

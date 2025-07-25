@@ -17,7 +17,20 @@ This is an HTML comment in Markdown
 <!--**Replace the BlueStamp logo below with an image of yourself and your completed project. Follow the guide [here](https://tomcam.github.io/least-github-pages/adding-images-github-pages-site.html) if you need help.** -->
 
 ![Headstone Image](logo.svg)
-  
+
+# Modification
+**Description:**
+One major addition was the 3-step calibration feature. Since wrist shapes and starting positions vary between users, I created a calibration mode where the user can set their personal reference angles. When this mode is activated, the system asks the user to hold their wrist in three positions: flat (neutral), bent upward, and bent downward. These values are saved temporarily and used to define the user’s unique motion range. This made the feedback more accurate and adaptable — instead of using fixed angle thresholds, the device adjusts to the user’s own wrist flexibility and neutral zone. I also added smaller but powerful Bluetooth text commands that enhance usability:
+- Typing "status" prints a full summary of the device’s current settings and data — including calibrated values, rep count, goal progress, and live angles.
+- Typing "goal_#_" lets the user set a custom rep target, and the device will then vibrate once the target is reached.
+- Typing "help" displays all available commands, making it easier for the user to understand how to interact with the device.
+These features made the device feel more like a complete system with a user interface and not just something that ran automatically. They also helped with debugging and user experience, especially during testing or demonstrations.
+
+**Challenges**
+One of my biggest challenges was getting the flex sensor and accelerometer to work together without conflicting or inconsistent readings. Each sensor had different sensitivities and update rates, so combining their data for accurate feedback took a lot of trial and error. I had to carefully time my readings and apply smoothing logic to reduce sudden spikes or misreadings. Another major issue was rep accuracy. Early on, the system would count multiple reps even if I only moved my wrist once. This was because the sensor values fluctuated quickly around the threshold, causing the code to register multiple rep events. To fix it, I introduced a state-tracking variable that made sure only one rep was counted per full up-and-down wrist movement. My calibration feature also took a lot of time to develop. It was hard to decide how to structure it in a way that was both flexible and consistent across users. I eventually created a step-by-step mode that stores three different wrist positions, which improved the accuracy of all later feedback, but only after lots of testing and debugging. Lastly, Bluetooth bugs were another struggle. Sometimes the BLE app wouldn't connect, or it would randomly disconnect while I was testing. I had to experiment with how long to wait for the connection and how to reset the module when it wasn’t responding. To fix this issue, I turned off low power mode and I also replaced my cable which connected my computer with my ESP 32.
+**Next Steps**
+Moving forward, I plan to make the device even more wearable by sewing all the electronic components into the wrist sleeve, including the ESP32, flex sensor, accelerometer, and vibration motor. This will make it more comfortable and realistic to wear during rehab exercises. I also want to add data storage features using an SD card so the device can track progress over time, even after it's turned off. This would allow users to see long-term recovery trends and not lose their data between sessions. I could also create a simple app which has a better interface because the current one looks pretty blank.
+
 # Final Milestone
 
 <!--- **Don't forget to replace the text below with the embedding for your milestone video. Go to Youtube, click Share -> Embed, and copy and paste the code to replace what's below.**
@@ -958,23 +971,21 @@ I used a vibration motor in my device for silent feedback. When powered, the mot
 
 The ESP32 is a low-power system-on-a-chip microcontroller with integrated Wi-Fi and Bluetooth capabilities. The built-in Wi-Fi and Bluetooth modules enable the ESP32 to connect to networks, communicate with other devices, and access online resources. In my project, it connected all my parts and comminicated through bluetooth with my phone. It calculated vibration feedback and also roll, pitch, and yaw.
 
-<!-- # Bill of Materials
-Here's where you'll list the parts in your project. To add more rows, just copy and paste the example rows below.
-Don't forget to place the link of where to buy each component inside the quotation marks in the corresponding row after href =. Follow the guide [here]([url](https://www.markdownguide.org/extended-syntax/)) to learn how to customize this to your project needs. 
+# Bill of Materials
 
 | **Part** | **Note** | **Price** | **Link** |
 |:--:|:--:|:--:|:--:|
-| Item Name | What the item is used for | $Price | <a href="https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/"> Link </a> |
-| Item Name | What the item is used for | $Price | <a href="https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/"> Link </a> |
-| Item Name | What the item is used for | $Price | <a href="https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/"> Link </a> |
-| Item Name | What the item is used for | $Price | <a href="https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/"> Link </a> |
-| Item Name | What the item is used for | $Price | <a href="https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/"> Link </a> |
-| Item Name | What the item is used for | $Price | <a href="https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/"> Link </a> |
-| Item Name | What the item is used for | $Price | <a href="https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/"> Link </a> |
+| Accelerometer | Used to find roll pitch yaw and other motions | $9.95 | <a href="[https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/](https://www.adafruit.com/product/4503?srsltid=AfmBOooeUT-eA8baStZkTd9JjpvI2wclXTRXvUFUndc7o5rxm25LhIVK)"> Link </a> |
+| Flex Sensor | Used to calculate bend and bend angles | $18.95 | <a href="[https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/](https://www.sparkfun.com/flex-sensor-4-5.html)"> Link </a> |
+| Vibration motor | Provides silent feedback | $1.20 | <a href="[https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/](https://www.digikey.com/en/products/detail/seeed-technology-co-ltd/316040001/5487672?gclsrc=aw.ds&gad_source=1&gad_campaignid=20243136172&gbraid=0AAAAADrbLliQkR5Xf9sg3aA4x1LSwkpqn&gclid=Cj0KCQjws4fEBhD-ARIsACC3d2_RrQDMRIB3sX-5judugrYm-72kPzz9BUwP-NPjXRhJCHAZsPw-0ooaAgovEALw_wcB)"> Link </a> |
+| LED | Used to emit light when current passes through | $0.24 | <a href="[https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/](https://www.digikey.com/en/products/detail/w-rth-elektronik/151051VS04000/4490015?gclsrc=aw.ds&gad_source=1&gad_campaignid=20228387720&gbraid=0AAAAADrbLlgLcggLdC2X5yyqsmpe29Qer&gclid=Cj0KCQjws4fEBhD-ARIsACC3d2_oX3sMsoWr8V9DB1r8nUS76KPT9KDpj2ruhZFLz79OEjgAHlDvYRkaAnBTEALw_wcB)"> Link </a> |
+| Wrist Sleeve | Helps compress wrist | $15.97 | <a href="[https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/](https://www.amazon.com/Sparthos-Wrist-Support-Sleeves-Pair/dp/B07G4JMCMY/ref=sr_1_5?crid=36SXY1T9QFS6D&dib=eyJ2IjoiMSJ9.n4__OJr62LjYpCE_F8YrBByXgJmtH5DKQlUYJVaGRBsuG2nyIOnVKQGpT9yvJx8U1KhGR8_vpPslhR_f4RRxP_NvmBqmx1OXdzFP0VGZQUlCdNkxYBSkqk1oDEbnHEeH5bJMMiiwBpDVtgamwhWh_uXfLAcXHs3xgXZgoA8UeICcrYUUdRYaQgJLEjCs99CwjeY2uqDe3Vh9I2T1wUtsV13wEGY1whmaB9pAvhOb7jhUbg-KEAUeNLR026b4sKdwftfZPYpeWEpWZEWRVLHHb0_p7g1vRaU0LQbTSY5g5Vw.v-Mi3Q0lDB6I0Zayz0mDedcrgEiLZuMmeTjTYaFx4j4&dib_tag=se&keywords=wrist%2Bsleeve%2Bsparthos&qid=1753394974&sprefix=wrist%2Bsleeve%2Bsparthos%2Caps%2C121&sr=8-5&th=1)"> Link </a> |
+| PCB board | Used for soldering components | $8.99 | <a href="[https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/](https://www.amazon.com/EPLZON-Solder-able-Breadboard-Electronics-Compatible/dp/B09WZXHMDG?th=1)"> Link </a> |
+| battery pack | Used for portable battery power | $45.99 | <a href="[https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/](https://www.amazon.com/Anker-PowerCore-Compact-Charging-Technology/dp/B0D12T6R7M/ref=sr_1_1?crid=34VXUNIE0S9G6&dib=eyJ2IjoiMSJ9._g69FSDwhUjYjJe_EgIcMfl9_SJqF7pS-h0Xz8MDZwV6FFXas8JbCcHDsewvd8faU4kPU6gf9xSpf2kQjBXasoBAxPjr3sxHlInpDE3o6FZbZRk_pzRQAOGD3I9ZEc4lV0KqkajKLyOQ27P2oKkTBo36CEcdj5Nxpqs6Q4-wVV3tYFvmgxSEczmq7gFPF-biI4MiU2yURA8OA7o-oLmo5Hbwe5I8dwR_BvYJkpvq_h8.s4BVHjPeme3ab9BJQ9S2qh9En24-UE5vq_eWVNlA-Rc&dib_tag=se&keywords=portable%2Busbc%2Bbattery%2Bpack%2Banker&qid=1753395065&sprefix=portable%2Busbc%2Bbattery%2Bpack%2Banke%2Caps%2C131&sr=8-1&th=1)"> Link </a> |
+| resistors | Used to limit electrical current | $5.49 | <a href="[https://www.amazon.com/Arduino-A000066-ARDUINO-UNO-R3/dp/B008GRTSV6/](https://www.amazon.com/Chanzon-Resistor-Tolerance-Resistors-Certificated/dp/B08QRMXL9G/ref=sr_1_1_sspa?crid=1S3BB49YFMDFT&dib=eyJ2IjoiMSJ9.Vc74X4BdAoTFpYSJFqo4UbkIaNH9Kh9GyWTcBOSe1Nt5o1lkRWWcxDNCd4HdZoIGqnlzR-L0FbprQ0EoBPSirCflxmnr04tHjT8p-8WYxwVhsCc_1CmMbB3ftObR6o5wkn81BQ9kR2EqX4wjY1NKeVMks3rY7nPjcssaTG7VTJefg_MwFtLasaqGA0Aatt1naDE-6icfgngztVJRI8F-cmio3EmidxG5s1VX-Nenyjo.sNy-s_gZT9E_5hvWPt4gXz4gyDCrneFa6fG6GyHkjmU&dib_tag=se&keywords=180%2Bohm%2Bresistor&qid=1753395102&sprefix=180%2Bohm%2Bresisto%2Caps%2C142&sr=8-1-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&th=1)"> Link </a> |
 
 
-
-# Other Resources/Examples
+<!-- # Other Resources/Examples
 One of the best parts about Github is that you can view how other people set up their own work. Here are some past BSE portfolios that are awesome examples. You can view how they set up their portfolio, and you can view their index.md files to understand how they implemented different portfolio components.
 - [Example 1](https://trashytuber.github.io/YimingJiaBlueStamp/)
 - [Example 2](https://sviatil0.github.io/Sviatoslav_BSE/)
